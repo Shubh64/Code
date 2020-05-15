@@ -1,0 +1,331 @@
+
+MUST: Use coding standards and comments against important class (/* ..*/) and methods (/* ..*/), Exception handling (program should not terminate abruptly in case of invalid input).
+
+ 
+
+Rules: Use appropriate class and methods, collection framework. Output formatting should be retained.
+
+ 
+
+Used Car Dealership Inventory
+
+The task is to create a simple text-based "Console Application" in Java  to maintain a catalog of used cars. The catalog keeps track of each car's make, model, year, and sale price.
+
+The program begins with an empty catalog. The user is prompted to enter one of four possible commands:
+
+•             add - add a car to the catalog
+
+•             list - list all cars in the catalog
+
+•             update - update the details per in the catalog
+
+•             quit - quit the application
+
+If an unknown command is entered, the user should be informed and asked to enter another command. If the add or list commands are entered, the operation for that command is carried out, then the user is prompted for another command. The application continues until the quit command is entered.
+
+The add command
+
+If the add command is entered, the user will then be prompted to enter the car's make, model, year, and sales price, one-by-one. The make (e.g. Isuzu) and model (e.g. Trooper) can be arbitrary strings, while the year (e.g. 1990) should be an integer and the sales price (e.g. 2599.99) should be a floating point value. After the data is entered, the record should be stored in memory to be recalled later by the list command. You may assume that the catalog will never hold more than 20 cars.
+
+You are required to do any error checking on the data that is entered. 
+
+The update command
+
+If the update command is entered, the user will then be prompted to enter the car's make, model - "make\model" format in single liner. The make (e.g. Isuzu) and model (e.g. Trooper) can be arbitrary strings. If car is found for this combination - then request the user to enter year (e.g. 1990) should be an integer and the sales price (e.g. 2599.99) should be a floating point value. After the data is entered, the record should be stored in memory to be recalled later by the list command.
+
+You are required to do any error checking on the data that is entered. 
+
+The list command
+
+If the user enters the list command, the contents of the catalog should be displayed to the screen, nicely formatted. The format of the output should resemble the example trace below. Regardless of the precision of the stored sales price, the value should be formatted in dollars and cents. If no items exist in the catalog, the command should output a message stating so. Otherwise, after printing out the details of each car, the number of cars and total price of all cars should be printed.
+
+ 
+
+Example program trace:
+
+ 
+
+Welcome to Mullet Joe's Gently Used Autos!
+
+ 
+
+Enter command: show
+
+ 
+
+Sorry, but "show" is not a valid command. Please try again.
+
+ 
+
+Enter command: list
+
+ 
+
+  There are currently no cars in the catalog.
+
+ 
+
+Enter command: add
+
+Make: Volkswagen
+
+Model: Jetta
+
+Year: 1999
+
+Sales Price ($): 9450
+
+ 
+
+Enter command: add
+
+Make: Toyota
+
+Model: Prius
+
+Year: 2006
+
+Sales Price ($): 27999.90
+
+ 
+
+Enter command: list
+
+ 
+
+1999 Volkswagen Jetta          $9,450.00
+
+2006 Toyota Prius             $27,999.90
+
+ 
+
+Number of cars: 2
+
+Total inventory:              $37,449.90
+
+ 
+
+Enter command: update
+
+Enter the car details (Make\Model format): Toyota\Prius
+
+Year: 2020
+
+Sales Price ($): 37999.90
+
+ 
+
+Enter command: list
+
+ 
+
+1999 Volkswagen Jetta          $9,450.00
+
+2020 Toyota Prius             $37,999.90
+
+ 
+
+Number of cars: 2
+
+Total inventory:              $47,449.90
+
+ 
+
+Enter command: quit
+
+ 
+
+Good bye!
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+package usedCarManagement;
+
+import java.util.*;
+/* CarManagementMain is the main class
+ * it takes the input command and perform the operation accordingly
+ * */
+public class CarManagementMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		boolean command = true ,quitCommand=true;
+		Operations operations = new Operations();
+		while (command != false && quitCommand!=false) {
+			System.out.println("Enter a Command\r\n" + "\r\n" + "•  add - add a car to the catalog\r\n" 
+					+ "•  list - list all cars in the catalog\r\n"
+					+ "•  update - update the details per in the catalog\r\n" 
+					+ "•  quit - quit the application");
+			Scanner sc = new Scanner(System.in);
+			String enteredCommand = sc.nextLine();
+			if (enteredCommand.equalsIgnoreCase("add")) {
+				try {
+					System.out.println("Enter Make");
+					String make = sc.next();
+					System.out.println("Enter Model");
+					String model = sc.next();
+					System.out.println("Enter Year");
+					int year = sc.nextInt();
+					System.out.println("Enter Sales Price ($)");
+					float price = sc.nextFloat();
+					operations.add(make, model, year, price);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Please Enter in Required Format \n");
+				}
+			} else if (enteredCommand.equalsIgnoreCase("list")) {
+				operations.list();
+			} else if (enteredCommand.equalsIgnoreCase("update")) {
+				System.out.println("Enter Make");
+				String make = sc.next();
+				System.out.println("Enter Model");
+				String model = sc.next();
+				operations.update(make, model);
+
+			} else if (enteredCommand.equalsIgnoreCase("quit")) {
+				quitCommand = operations.quit();
+
+			} else {
+				System.out.println("Please Enter a Proper Command \n");
+			}
+			command = true;
+		}
+
+	}
+
+}
+
+class CarDetails {
+	String make, model;
+	int year;
+	float price;
+
+	/**
+	 * @return the make
+	 */
+	public String getMake() {
+		return make;
+	}
+
+	/**
+	 * @param make the make to set
+	 */
+	public void setMake(String make) {
+		this.make = make;
+	}
+
+	/**
+	 * @return the model
+	 */
+	public String getModel() {
+		return model;
+	}
+
+	/**
+	 * @param make
+	 * @param model
+	 * @param year
+	 * @param price
+	 */
+	public CarDetails(String make, String model, int year, float price) {
+		super();
+		this.make = make;
+		this.model = model;
+		this.year = year;
+		this.price = price;
+	}
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	/**
+	 * @return the year
+	 */
+	public int getYear() {
+		return year;
+	}
+
+	/**
+	 * @param year the year to set
+	 */
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	/**
+	 * @return the price
+	 */
+	public float getPrice() {
+		return price;
+	}
+
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(float price) {
+		this.price = price;
+	}
+}
+
+class Operations {
+	ArrayList<CarDetails> carDetails = new ArrayList<CarDetails>();
+	Scanner sc = new Scanner(System.in);
+
+	public void add(String make, String model, int year, float price) {
+		carDetails.add(new CarDetails(make, model, year, price));
+	}
+
+	public void list() {
+		float price = 0;
+		for (CarDetails obj : carDetails) {
+			System.out.println(obj.getYear() + " " + obj.getMake() + " " + obj.getModel() + "   $" + obj.getPrice());
+			price += obj.getPrice();
+		}
+		System.out.println("Number of cars:" + carDetails.size());
+		System.out.println("Total inventory: $" + price);
+
+	}
+
+	public void update(String make, String model) {
+		for (CarDetails obj : carDetails) {
+			if (make.equalsIgnoreCase(obj.getMake()) && model.equalsIgnoreCase(obj.getModel())) {
+				try {
+					System.out.println("Enter Year");
+					int year = sc.nextInt();
+					System.out.println("Enter Sales Price ($)");
+					float price = sc.nextFloat();
+					obj.setYear(year);
+					obj.setPrice(price);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Please Enter in Required Format \n");
+				}
+			}
+		}
+	}
+
+	public boolean quit() {
+		
+		System.out.println("Good Bye!");
+		
+		return false;
+	}
+
+}
